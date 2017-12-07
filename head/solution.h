@@ -16,27 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "eval.h"
-#include <cmath>
+#ifndef __solution_h__
+#define __solution_h__
 
-using std::sqrt;
+#include "node.h"
+#include <vector>
+#include <random>
 
-unsigned int max_arch(vector<Node> const &coords, vector<unsigned int> &sol)
-{
-	unsigned int ans = 0;
-	double max_cost = 0.0;
-	unsigned int k = (unsigned int)coords.size();
+class Solution {
+private:
+	std::uniform_int_distribution<unsigned> r_int;
+	std::uniform_real_distribution<float> r_double;
 
-	for (unsigned int i = 0; i < k; i++) {
-		double dx = coords.at(sol.at(i)).x
-		    - coords.at(sol.at((i + 1) % k)).x;
-		double dy = coords.at(sol.at(i)).y
-		    - coords.at(sol.at((i + 1) % k)).y;
-		double dist = sqrt(dx * dx + dy * dy);
-		if (dist > max_cost) {
-			max_cost = dist;
-			ans = i;
-		}
-	}
-	return ans;
-}
+	void flip(void);
+	void kopt(void);
+public:
+	std::vector<Node> coords;
+	std::vector<unsigned int> perm;
+	std::vector<bool> orig;
+
+	Solution();
+	Solution(unsigned int n);
+	Solution(Solution const &other);
+
+	void any_neighbor(void);
+	double eval(void);
+	void greedy_init(void);
+	unsigned int size(void);
+	void push_back(Node n);
+};
+
+
+#endif
