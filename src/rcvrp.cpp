@@ -62,6 +62,7 @@ int main(int const argc, char const **argv)
 		cin >> y;
 		coords.push_back(Node{x, y});
 	}
+
 	/* Start solving using many threads */
 	vector< future< vector<unsigned int> > > threads(ctx.threads);
 	for (unsigned int i = 0; i < ctx.threads; i++)
