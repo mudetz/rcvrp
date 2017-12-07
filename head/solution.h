@@ -31,7 +31,7 @@ private:
 	void flip(void);
 	void kopt(void);
 public:
-	std::vector<Node> coords;
+	static std::vector<Node> coords;
 	std::vector<unsigned int> perm;
 	std::vector<bool> orig;
 

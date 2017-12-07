@@ -20,14 +20,12 @@
 #include "rcvrp.h"
 #include "sa.h"
 #include "solution.h"
-#include <algorithm>
 #include <future>
 #include <iostream>
 #include <vector>
 
 using std::async;
 using std::cin;
-using std::copy;
 using std::cout;
 using std::fixed;
 using std::future;
@@ -83,10 +81,10 @@ int main(int const argc, char const **argv)
 	cout << fixed << best.eval() << '\n';
 	for (unsigned int i = 0; i < best.size(); i++)
 		cout << fixed
-		     << best.coords.at( best.perm.at(i) ).x
+		     << Solution::coords.at( best.perm.at(i) ).x
 		     << ' '
 		     << fixed
-		     << best.coords.at( best.perm.at(i) ).y
+		     << Solution::coords.at( best.perm.at(i) ).y
 		     << '\n';
 
 	return 0;
