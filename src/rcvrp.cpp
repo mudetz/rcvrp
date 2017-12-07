@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "config.h"
-#include "eval.h"
 #include "node.h"
 #include "rcvrp.h"
 #include "sa.h"

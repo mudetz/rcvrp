@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "eval.h"
 #include "sa.h"
 #include "temperature.h"
 #include "config.h"
