@@ -41,7 +41,7 @@ using std::vector;
 
 vector<unsigned int> sa(vector<Node> const &coords)
 {
-	/* Initial solution by random shuffling */
+	/* Initial greedy solution by sorting */
 	vector<unsigned int> sol;
 	sol.reserve(coords.size());
 	for (unsigned int i = 0; i < coords.size(); i++)
@@ -83,10 +83,10 @@ vector<unsigned int> sa(vector<Node> const &coords)
 		/* If neighbor is better, switch to it */
 		if (diff > 0.0f)
 			neigh = nxt_neigh;
-		/* Or maybe switch to it */
+		/* Or maybe just switch to it */
 		else if (rd_double(rd) < exp(diff / t()))
 			neigh = nxt_neigh;
-		/* And maybe the new one is the best one so far */
+		/* And check if the new one is the best one so far */
 		if (eval(coords, neigh) < eval(coords, best))
 			best = neigh;
 	} while (duration_cast<ms>(hrc::now() - start) <= ms(ctx.max_ms));
