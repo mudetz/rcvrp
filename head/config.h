@@ -20,8 +20,10 @@
 #define __config_h__
 
 struct rcvrp_cfg {
-	float max_temp;
-	float temp_multiplier;
+	double max_temp;
+	double risk_threshold;
+	double temp_multiplier;
+	double temperature;
 	unsigned int max_cars;
 	unsigned int max_cities;
 	unsigned int max_deposites;
@@ -29,7 +31,6 @@ struct rcvrp_cfg {
 	unsigned int max_ms;
 	unsigned int max_neighbors;
 	unsigned int rd_seed;
-	unsigned int risk_threshold;
 	unsigned int threads;
 };
 

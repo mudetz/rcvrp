@@ -19,6 +19,7 @@
 #include "eval.h"
 #include "sa.h"
 #include "temperature.h"
+#include "config.h"
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -27,9 +28,9 @@
 using hrc = std::chrono::high_resolution_clock;
 using ms = std::chrono::milliseconds;
 using std::chrono::duration_cast;
-using std::default_random_engine;
+using std::random_device;
 using std::exp;
-using std::random_shuffle;
+using std::sort;
 using std::swap;
 using std::uniform_int_distribution;
 using std::uniform_real_distribution;
@@ -42,42 +43,48 @@ vector<unsigned int> sa(vector<Node> const &coords)
 	sol.reserve(coords.size());
 	for (unsigned int i = 0; i < coords.size(); i++)
 		sol.push_back(i);
-	random_shuffle(sol.begin(), sol.end());
+	sort(sol.begin(), sol.end(), [&coords](unsigned &a, unsigned &b) {
+		if (coords.at(a).x != coords.at(b).x)
+			return coords.at(a).x < coords.at(b).x;
+		return coords.at(a).y < coords.at(b).y;
+	});
 
 	/* Prepare variables for neighbors and PRNGs */
 	vector<unsigned int> best{sol};
 	vector<unsigned int> neigh{sol};
-	Temperature t(100.0f);
+	Temperature t(ctx.temperature);
 
-	default_random_engine rd;
+	random_device rd;
 	uniform_int_distribution<unsigned int>
 	    rd_int(0, (unsigned int)coords.size() - 1);
-	uniform_real_distribution<float> rd_float(0.0, 1.0);
+	uniform_real_distribution<double> rd_double(0.0, 1.0);
 
 	/* Iterate through neighbors in a time window */
 	hrc::time_point start = hrc::now();
 	do {
 		/* Create random neighbor by doing 2-opt on random indexes */
-		unsigned int m = 0;
-		unsigned int n = 0;
-		while (m == n) {
+		unsigned int m;
+		unsigned int n;
+		do {
 			m = rd_int(rd);
 			n = rd_int(rd);
-		}
+		} while (m == n);
 		if (m > n)
 			swap(m, n);
+
 		vector<unsigned int> nxt_neigh{neigh};
 		reverse(nxt_neigh.begin() + m, nxt_neigh.begin() + n);
 
-		float diff = eval(coords, neigh) - eval(coords, nxt_neigh);
+		double diff = eval(coords, neigh) - eval(coords, nxt_neigh);
+
 		/* If neighbor is better, switch to it */
 		if (diff > 0.0f)
 			neigh = nxt_neigh;
 		/* Or maybe switch to it */
-		else if (rd_float(rd) < exp(diff / t()))
+		else if (rd_double(rd) < exp(diff / t()))
 			neigh = nxt_neigh;
 		/* And maybe the new one is the best one so far */
-		if (eval(coords, neigh) > eval(coords, best))
+		if (eval(coords, neigh) < eval(coords, best))
 			best = neigh;
 	} while (duration_cast<ms>(hrc::now() - start) <= ms(ctx.max_ms));
 

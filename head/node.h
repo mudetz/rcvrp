@@ -21,13 +21,13 @@
 
 class Node {
 public:
-	float x;
-	float y;
+	double x;
+	double y;
 	Node()
 		: x(0)
 		, y(0)
 	{}
-	Node(float _x, float _y)
+	Node(double _x, double _y)
 		: x(_x)
 		, y(_y)
 	{}
