@@ -21,12 +21,12 @@
 
 class Temperature {
 private:
-	float curr;
+	double curr;
 public:
-	Temperature(float _curr)
+	Temperature(double _curr)
 		: curr(_curr)
 	{}
-	float operator() (void);
+	double operator() (void);
 };
 
 #endif

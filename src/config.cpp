@@ -29,16 +29,17 @@ void parse_cfg(int const argc, char const **argv)
 	(void)argv;
 
 	/* Set defaults */
-	ctx.max_temp = 100.0f;
-	ctx.temp_multiplier = 0.8f;
-	ctx.max_cars = 64u;
-	ctx.max_cities = 64u;
-	ctx.max_deposites = 1u;
-	ctx.max_iter = 0u;
-	ctx.max_ms = 256u;
-	ctx.max_neighbors = 8u;
-	ctx.rd_seed = 0u;
-	ctx.risk_threshold = 1024u;
+	ctx.max_temp = 100.0;
+	ctx.risk_threshold = 1024.0;
+	ctx.temperature = 128.0;
+	ctx.temp_multiplier = 0.98;
+	ctx.max_cars = 64;
+	ctx.max_cities = 64;
+	ctx.max_deposites = 1;
+	ctx.max_iter = 0;
+	ctx.max_ms = 1024;
+	ctx.max_neighbors = 8;
+	ctx.rd_seed = 0;
 	ctx.threads = thread::hardware_concurrency();
 
 	/* Parse argument vector */
