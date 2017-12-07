@@ -48,8 +48,8 @@ vector<unsigned int> sa(vector<Node> const &coords)
 		sol.push_back(i);
 	sort(sol.begin(), sol.end(), [&coords](unsigned &a, unsigned &b) {
 		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
-			return coords.at(a).x < coords.at(b).x;
-		return coords.at(a).y < coords.at(b).y;
+			return coords.at(a).y < coords.at(b).y;
+		return coords.at(a).x < coords.at(b).x;
 	});
 
 	/* Prepare variables for neighbors and PRNGs */
