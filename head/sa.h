@@ -20,12 +20,11 @@
 #define __sa_h__
 
 #include "config.h"
-#include "eval.h"
-#include "node.h"
+#include "solution.h"
 #include <vector>
 
 using std::vector;
 
-vector<unsigned int> sa(vector<Node> const &corrds);
+Solution sa(Solution corrds);
 
 #endif

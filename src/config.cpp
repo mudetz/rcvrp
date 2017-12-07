@@ -37,10 +37,14 @@ void parse_cfg(int const argc, char const **argv)
 	ctx.max_cities = 64;
 	ctx.max_deposites = 1;
 	ctx.max_iter = 0;
-	ctx.max_ms = 1024;
+	ctx.max_ms = 60000;
 	ctx.max_neighbors = 8;
 	ctx.rd_seed = 0;
+#if BENCHMARK
+	ctx.threads = 1;
+#else
 	ctx.threads = thread::hardware_concurrency();
+#endif
 
 	/* Parse argument vector */
 
