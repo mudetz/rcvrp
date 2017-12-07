@@ -23,13 +23,16 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <limits>
 #include <random>
 
+using dl = std::numeric_limits<float>;
 using hrc = std::chrono::high_resolution_clock;
 using ms = std::chrono::milliseconds;
 using std::chrono::duration_cast;
-using std::random_device;
 using std::exp;
+using std::fabs;
+using std::random_device;
 using std::sort;
 using std::swap;
 using std::uniform_int_distribution;
@@ -44,7 +47,7 @@ vector<unsigned int> sa(vector<Node> const &coords)
 	for (unsigned int i = 0; i < coords.size(); i++)
 		sol.push_back(i);
 	sort(sol.begin(), sol.end(), [&coords](unsigned &a, unsigned &b) {
-		if (coords.at(a).x != coords.at(b).x)
+		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
 			return coords.at(a).x < coords.at(b).x;
 		return coords.at(a).y < coords.at(b).y;
 	});
