@@ -21,19 +21,38 @@
 
 using std::sqrt;
 
-float eval(vector<Node> const &coords, vector<unsigned int> const &schedule)
+double eval(vector<Node> const &coords, vector<unsigned int> const &sol)
 {
-	float cost = 0.0f;
+	double cost = 0.0;
 	unsigned int k = (unsigned int)coords.size();
 
 	for (unsigned int i = 0; i < k; i++) {
-		float dx = coords.at(schedule.at(i)).x
-		    - coords.at(schedule.at((i + 1) % k)).x;
-		float dy = coords.at(schedule.at(i)).y
-		    - coords.at(schedule.at((i + 1) % k)).y;
+		double dx = coords.at(sol.at(i)).x
+		    - coords.at(sol.at((i + 1) % k)).x;
+		double dy = coords.at(sol.at(i)).y
+		    - coords.at(sol.at((i + 1) % k)).y;
 		cost += sqrt(dx * dx + dy * dy);
 	}
 
 	return cost;
 }
 
+unsigned int max_arch(vector<Node> const &coords, vector<unsigned int> &sol)
+{
+	unsigned int ans = 0;
+	double max_cost = 0.0;
+	unsigned int k = (unsigned int)coords.size();
+
+	for (unsigned int i = 0; i < k; i++) {
+		double dx = coords.at(sol.at(i)).x
+		    - coords.at(sol.at((i + 1) % k)).x;
+		double dy = coords.at(sol.at(i)).y
+		    - coords.at(sol.at((i + 1) % k)).y;
+		double dist = sqrt(dx * dx + dy * dy);
+		if (dist > max_cost) {
+			max_cost = dist;
+			ans = i;
+		}
+	}
+	return ans;
+}

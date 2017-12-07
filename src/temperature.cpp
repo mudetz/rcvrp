@@ -17,10 +17,12 @@
  */
 
 #include "temperature.h"
+#include "config.h"
 
-float Temperature::operator() (void)
+double Temperature::operator() (void)
 {
-	float r = this->curr;
-	curr *= 0.8f;
+	double r = this->curr;
+	if (this->curr > 1)
+		this->curr *= ctx.temp_multiplier;
 	return r;
 }

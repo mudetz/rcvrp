@@ -24,6 +24,7 @@
 
 using std::vector;
 
-float eval(vector<Node> const &coords, vector<unsigned int> const &schedule);
+double eval(vector<Node> const &coords, vector<unsigned int> const &schedule);
+unsigned int max_arch(vector<Node> const &coords, vector<unsigned int> &sol);
 
 #endif

@@ -55,5 +55,8 @@ Mkfile.old
 dkms.conf
 *.smod
 
+# Test instances
+instances/
+
 # Final executable
 rcvrp
