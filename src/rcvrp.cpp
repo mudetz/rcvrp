@@ -28,6 +28,7 @@
 using std::async;
 using std::cin;
 using std::cout;
+using std::fixed;
 using std::future;
 using std::vector;
 
@@ -38,10 +39,10 @@ int main(int const argc, char const **argv)
 
 	/* Read instance from stdin */
 	unsigned int nodes;
-	fscanf(stdin, "%u", &nodes);
+	cin >> nodes;
 
-	unsigned int threshold;
-	fscanf(stdin, "%u", &threshold);
+	double threshold;
+	cin >> threshold;
 
 	vector<unsigned> demand;
 	demand.reserve(nodes);
@@ -54,8 +55,8 @@ int main(int const argc, char const **argv)
 	vector<Node> coords;
 	coords.reserve(nodes);
 	for (unsigned int i = 0; i < nodes; i++) {
-		float x;
-		float y;
+		double x;
+		double y;
 
 		cin >> x;
 		cin >> y;
@@ -73,16 +74,19 @@ int main(int const argc, char const **argv)
 	/* Select best solution */
 	vector<unsigned int> best = results.at(0);
 	for (unsigned int i = 0; i < results.size(); i++)
-		if (eval(coords, results.at(i)) > eval(coords, best))
+		if (eval(coords, results.at(i)) < eval(coords, best))
 			best = results.at(i);
 
 	/* Output best solution cost and nodes */
-	cout << eval(coords, best) << '\n';
+	cout.precision(6);
+	cout << fixed << eval(coords, best) << '\n';
 	for (unsigned int i = 0; i < best.size(); i++)
-		cout << coords.at( best.at(i) ).x
-			  << ' '
-			  << coords.at( best.at(i) ).y
-			  << '\n';
+		cout << fixed
+		     << coords.at( best.at(i) ).x
+		     << ' '
+		     << fixed
+		     << coords.at( best.at(i) ).y
+		     << '\n';
 
 	return 0;
 }
