@@ -30,7 +30,7 @@ OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
 # Compiler options
 CXX ?= /usr/bin/g++
 CPPFLAGS = $(addprefix -I, $(HEADDIR)) -MMD -MP
-CFLAGS = -O2 -Wall -Weffc++ -std=gnu++11 -Wextra -Waggregate-return \
+CFLAGS = -g -O2 -Wall -pthread -Weffc++ -std=gnu++11 -Wextra \
 	-Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion \
 	-Wdisabled-optimization -Wfloat-equal -Wformat -Wformat=2 \
 	-Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimport \
