@@ -54,7 +54,7 @@ Solution::Solution(unsigned int n)
 	, orig(n, false)
 {
 	perm.reserve(n);
-	orig.back() = false;
+	orig.back() = true;
 
 	for (unsigned int i = 0; i < n; i++)
 		perm.push_back(i);
