@@ -19,11 +19,7 @@
 #ifndef __sa_h__
 #define __sa_h__
 
-#include "config.h"
 #include "solution.h"
-#include <vector>
-
-using std::vector;
 
 Solution sa(Solution corrds);
 

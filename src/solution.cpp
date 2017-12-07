@@ -17,7 +17,6 @@
  */
 
 #include "solution.h"
-#include <numeric>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -32,18 +31,18 @@ using std::fabs;
 using std::random_device;
 using dl = std::numeric_limits<double>;
 
+std::vector<Node> Solution::coords = std::vector<Node>{};
+
 Solution::Solution()
 	: r_int(0, 100)
 	, r_double(0.0, 1.0)
-	, coords()
 	, perm()
 	, orig()
 {}
 
 Solution::Solution(Solution const &other)
-	: r_int(0, (unsigned int)other.coords.size() - 1)
+	: r_int(0, (unsigned int)Solution::coords.size() - 1)
 	, r_double(0.0, 1.0)
-	, coords(other.coords)
 	, perm(other.perm)
 	, orig(other.orig)
 {}
@@ -51,11 +50,9 @@ Solution::Solution(Solution const &other)
 Solution::Solution(unsigned int n)
 	: r_int(0, n - 1)
 	, r_double(0.0, 1.0)
-	, coords()
 	, perm()
 	, orig(n, false)
 {
-	coords.reserve(n);
 	perm.reserve(n);
 	orig.back() = false;
 
@@ -90,7 +87,7 @@ void Solution::kopt(void)
 void Solution::any_neighbor(void)
 {
 	random_device rd;
-	if (r_double(rd) < 0.25)
+	if (r_double(rd) < 0.05)
 		flip();
 	else
 		kopt();
@@ -99,7 +96,7 @@ void Solution::any_neighbor(void)
 double Solution::eval(void)
 {
 	double cost = 0.0;
-	unsigned int k = (unsigned int)coords.size();
+	unsigned int k = (unsigned int)Solution::coords.size();
 
 	for (unsigned int i = 0; i < k; i++) {
 		/* Check if returning to deposit */
@@ -108,23 +105,23 @@ double Solution::eval(void)
 			double dy;
 
 			/* Cost to return to deposit from current point */
-			dx = coords.at(perm.at(i)).x;
-			dy = coords.at(perm.at(i)).y;
+			dx = Solution::coords.at(perm.at(i)).x;
+			dy = Solution::coords.at(perm.at(i)).y;
 			cost += sqrt(dx * dx + dy * dy);
 
 			/* Cost to get from deposit to next point */
-			dx = coords.at((i + 1) % k).x;
-			dy = coords.at((i + 1) % k).y;
+			dx = Solution::coords.at((i + 1) % k).x;
+			dy = Solution::coords.at((i + 1) % k).y;
 			cost += sqrt(dx * dx + dy * dy);
 		} else {
 			double dx;
 			double dy;
 
-			dx = coords.at(perm.at(i)).x;
-			dx -= coords.at(perm.at((i + 1) % k)).x;
+			dx = Solution::coords.at(perm.at(i)).x;
+			dx -= Solution::coords.at(perm.at((i + 1) % k)).x;
 
-			dy = coords.at(perm.at(i)).y;
-			dy -= coords.at(perm.at((i + 1) % k)).y;
+			dy = Solution::coords.at(perm.at(i)).y;
+			dy -= Solution::coords.at(perm.at((i + 1) % k)).y;
 
 			/* Cost to next point */
 			cost += sqrt(dx * dx + dy * dy);
@@ -136,19 +133,19 @@ double Solution::eval(void)
 
 void Solution::greedy_init(void)
 {
-	sort(perm.begin(), perm.end(), [&](unsigned a, unsigned b) {
-		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
-			return coords.at(a).y <= coords.at(b).y;
-		return coords.at(a).x <= coords.at(b).x;
+	sort(perm.begin(), perm.end(), [](unsigned a, unsigned b) {
+		if (fabs(Solution::coords.at(a).x - Solution::coords.at(b).x) <= dl::epsilon())
+			return Solution::coords.at(a).y <= Solution::coords.at(b).y;
+		return Solution::coords.at(a).x <= Solution::coords.at(b).x;
 	});
 }
 
 unsigned int Solution::size(void)
 {
-	return (unsigned int)coords.size();
+	return (unsigned int)Solution::coords.size();
 }
 
 void Solution::push_back(Node n)
 {
-	coords.push_back(n);
+	Solution::coords.push_back(n);
 }

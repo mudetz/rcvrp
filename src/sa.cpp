@@ -22,9 +22,7 @@
 #include <chrono>
 #include <cmath>
 #include <random>
-#include <algorithm>
 
-using std::count_if;
 using hrc = std::chrono::high_resolution_clock;
 using ms = std::chrono::milliseconds;
 using std::chrono::duration_cast;
@@ -35,8 +33,10 @@ using unif_dbl_d = std::uniform_real_distribution<double>;
 
 #if BENCHMARK
 #include <iostream>
+#include <algorithm>
 using std::cerr;
 using std::fixed;
+using std::count_if;
 #endif
 
 Solution sa(Solution sol)
