@@ -16,11 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "config.h"
-#include "eval.h"
 #include "node.h"
 #include "rcvrp.h"
 #include "sa.h"
-#include <algorithm>
+#include "solution.h"
 #include <future>
 #include <iostream>
 #include <vector>
@@ -52,41 +51,40 @@ int main(int const argc, char const **argv)
 		demand.push_back(d);
 	}
 
-	vector<Node> coords;
-	coords.reserve(nodes);
+	Solution sol(nodes);
 	for (unsigned int i = 0; i < nodes; i++) {
 		double x;
 		double y;
 
 		cin >> x;
 		cin >> y;
-		coords.push_back(Node{x, y});
+		sol.push_back(Node{x, y});
 	}
 
 	/* Start solving using many threads */
-	vector< future< vector<unsigned int> > > threads(ctx.threads);
+	vector< future<Solution> > threads(ctx.threads);
 	for (unsigned int i = 0; i < ctx.threads; i++)
-		threads.at(i) = async(sa, coords);
+		threads.at(i) = async(sa, sol);
 
-	vector< vector<unsigned int> > results(ctx.threads);
+	vector<Solution> results(ctx.threads);
 	for (unsigned int i = 0; i < ctx.threads; i++)
 		results.at(i) = threads.at(i).get();
 
 	/* Select best solution */
-	vector<unsigned int> best = results.at(0);
+	Solution best = results.at(0);
 	for (unsigned int i = 0; i < results.size(); i++)
-		if (eval(coords, results.at(i)) < eval(coords, best))
+		if (results.at(i).eval() < best.eval())
 			best = results.at(i);
 
 	/* Output best solution cost and nodes */
 	cout.precision(6);
-	cout << fixed << eval(coords, best) << '\n';
+	cout << fixed << best.eval() << '\n';
 	for (unsigned int i = 0; i < best.size(); i++)
 		cout << fixed
-		     << coords.at( best.at(i) ).x
+		     << Solution::coords.at( best.perm.at(i) ).x
 		     << ' '
 		     << fixed
-		     << coords.at( best.at(i) ).y
+		     << Solution::coords.at( best.perm.at(i) ).y
 		     << '\n';
 
 	return 0;
