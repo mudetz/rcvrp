@@ -18,8 +18,14 @@
 
 #include "config.h"
 #include <thread>
+#include <string>
+#include <cstdlib>
 
+using std::stof;
+using std::stoul;
 using std::thread;
+using std::string;
+using std::getenv;
 
 struct rcvrp_cfg ctx;
 
@@ -29,21 +35,26 @@ void parse_cfg(int const argc, char const **argv)
 	(void)argv;
 
 	/* Set defaults */
-	ctx.max_temp = 100.0;
-	ctx.risk_threshold = 1024.0;
-	ctx.temperature = 128.0;
+	ctx.risk_threshold = 1024.0; //WARD should be in args
 	ctx.temp_multiplier = 0.98;
-	ctx.max_cars = 64;
-	ctx.max_cities = 64;
-	ctx.max_deposites = 1;
+	ctx.temperature = 128.0;
 	ctx.max_iter = 0;
-	ctx.max_ms = 1024;
-	ctx.max_neighbors = 8;
-	ctx.rd_seed = 0;
+	ctx.max_ms = 256;
+#if BENCHMARK
+	ctx.threads = 1;
+#else
 	ctx.threads = thread::hardware_concurrency();
+#endif
 
 	/* Parse argument vector */
 
 	/* Parse environment variables */
-
+	if (getenv("MULTIPLIER"))
+		ctx.temp_multiplier = stof(getenv("MULTIPLIER"));
+	if (getenv("TEMPERATURE"))
+		ctx.temperature = stof(getenv("TEMPERATURE"));
+	if (getenv("ITERATIONS"))
+		ctx.max_iter = (unsigned int)stoul(getenv("ITERATIONS"));
+	if (getenv("LOOPTIME"))
+		ctx.max_ms = (unsigned int)stoul(getenv("LOOPTIME"));
 }

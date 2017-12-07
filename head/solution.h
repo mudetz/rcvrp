@@ -16,15 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __eval_h__
-#define __eval_h__
+#ifndef __solution_h__
+#define __solution_h__
 
 #include "node.h"
 #include <vector>
+#include <random>
 
-using std::vector;
+class Solution {
+private:
+	std::uniform_int_distribution<unsigned> r_int;
+	std::uniform_real_distribution<float> r_double;
 
-double eval(vector<Node> const &coords, vector<unsigned int> const &schedule);
-unsigned int max_arch(vector<Node> const &coords, vector<unsigned int> &sol);
+	void flip(void);
+	void kopt(void);
+public:
+	static std::vector<Node> coords;
+	std::vector<unsigned int> perm;
+	std::vector<bool> orig;
+
+	Solution();
+	Solution(unsigned int n);
+	Solution(Solution const &other);
+
+	void any_neighbor(void);
+	double eval(void);
+	void greedy_init(void);
+	unsigned int size(void);
+	void push_back(Node n);
+};
+
 
 #endif

@@ -17,6 +17,9 @@
 # Final executable name
 EXEC = rcvrp
 
+# Macros
+BENCHMARK ?= 0
+
 # Directories for sourcefiles, headers and object files
 SRCDIR = src
 HEADDIR = head
@@ -34,16 +37,17 @@ CFLAGS = -g -O2 -Wall -pthread -Weffc++ -std=gnu++11 -Wextra \
 	-Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion \
 	-Wdisabled-optimization -Wfloat-equal -Wformat -Wformat=2 \
 	-Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimport \
-	-Winit-self -Winline -Winvalid-pch -Wunsafe-loop-optimizations \
+	-Winit-self -Winvalid-pch -Wunsafe-loop-optimizations \
 	-Wlong-long -Wmissing-braces -Wmissing-field-initializers \
 	-Wmissing-format-attribute -Wmissing-include-dirs -Wmissing-noreturn \
-	-Wpacked -Wpadded -Wparentheses -Wpointer-arith -Wredundant-decls \
+	-Wpacked -Wparentheses -Wpointer-arith -Wredundant-decls \
 	-Wreturn-type -Wsequence-point -Wshadow -Wsign-compare \
 	-Wstack-protector -Wstrict-aliasing -Wstrict-aliasing=2 -Wswitch \
 	-Wswitch-default -Wswitch-enum -Wtrigraphs -Wuninitialized \
 	-Wunknown-pragmas -Wunreachable-code -Wunused -Wunused-function \
 	-Wunused-label -Wunused-parameter -Wunused-value -Wunused-variable \
-	-Wvariadic-macros -Wvolatile-register-var -Wwrite-strings
+	-Wvariadic-macros -Wvolatile-register-var -Wwrite-strings \
+	-D"BENCHMARK=${BENCHMARK}"
 LDFLAGS =
 LDLIBS =
 
