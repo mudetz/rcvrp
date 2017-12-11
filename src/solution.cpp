@@ -110,8 +110,8 @@ double Solution::eval(void)
 			cost += sqrt(dx * dx + dy * dy);
 
 			/* Cost to get from deposit to next point */
-			dx = Solution::coords.at((i + 1) % k).x;
-			dy = Solution::coords.at((i + 1) % k).y;
+			dx = Solution::coords.at(perm.at((i + 1) % k)).x;
+			dy = Solution::coords.at(perm.at((i + 1) % k)).y;
 			cost += sqrt(dx * dx + dy * dy);
 		} else {
 			double dx;
