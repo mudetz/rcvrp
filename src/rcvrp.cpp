@@ -77,15 +77,7 @@ int main(int const argc, char const **argv)
 			best = results.at(i);
 
 	/* Output best solution cost and nodes */
-	cout.precision(6);
-	cout << fixed << best.eval() << '\n';
-	for (unsigned int i = 0; i < best.size(); i++)
-		cout << fixed
-		     << Solution::coords.at( best.perm.at(i) ).x
-		     << ' '
-		     << fixed
-		     << Solution::coords.at( best.perm.at(i) ).y
-		     << '\n';
+	best.print();
 
 	return 0;
 }

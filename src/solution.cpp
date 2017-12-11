@@ -21,13 +21,20 @@
 #include <cmath>
 #include <limits>
 #include <random>
+#include <queue>
+#include <vector>
+#include <iostream>
 
+using std::fixed;
+using std::cout;
+using std::vector;
 using std::sqrt;
 using std::all_of;
 using std::swap;
 using std::reverse;
 using std::sort;
 using std::fabs;
+using std::queue;
 using std::random_device;
 using dl = std::numeric_limits<double>;
 
@@ -87,7 +94,7 @@ void Solution::kopt(void)
 void Solution::any_neighbor(void)
 {
 	random_device rd;
-	if (r_double(rd) < 0.05)
+	if (r_double(rd) < 0.5)
 		flip();
 	else
 		kopt();
@@ -148,4 +155,85 @@ unsigned int Solution::size(void)
 void Solution::push_back(Node n)
 {
 	Solution::coords.push_back(n);
+}
+
+void Solution::print(void)
+{
+	cout.precision(6);
+	cout << fixed << eval() << '\n';
+
+	unsigned int cars = (unsigned int)count(orig.begin(), orig.end(), true);
+	cout << cars << '\n';
+
+	/* Queue of circuits (each represented as a vector) */
+	queue< vector<unsigned int> > circuits;
+
+	unsigned int n = (unsigned int)orig.size();
+	unsigned int st = 0;
+	while (!orig.at(perm.at(st++)));
+
+	for (unsigned int i = 0; i < n; i++) {
+		if (orig.at(perm.at((st + i - 1 + n) % n)))
+			circuits.push(vector<unsigned int>{});
+		circuits.back().push_back(perm.at((st + i) % n));
+	}
+
+	/* For each circuit print cost, risk and nodes */
+	while (!circuits.empty()) {
+		vector<unsigned int> circuit = circuits.front();
+		circuits.pop();
+		unsigned int m = (unsigned int)circuit.size();
+
+		/* Temporary variables */
+		double risk = 0;
+		double cost = 0;
+		unsigned int money = 0;
+
+		/* Useful variables (improve legibility) */
+		double dx;
+		double dy;
+		double dist;
+
+		/* Distance & risk from deposit to first node */
+		dx = coords.at(circuit.at(0)).x;
+		dy = coords.at(circuit.at(0)).y;
+
+		dist = sqrt(dx * dx + dy * dy);
+		cost += dist;
+
+		/* Distance & risk among nodes */
+		for (unsigned int i = 1; i < m; i++) {
+			dx = coords.at(circuit.at(i - 1)).x;
+			dy = coords.at(circuit.at(i - 1)).y;
+
+			dx -= coords.at(circuit.at(i)).x;
+			dy -= coords.at(circuit.at(i)).y;
+
+			dist = sqrt(dx * dx + dy * dy);
+			cost += dist;
+
+#if 0
+			money += demand.at(i - 1);
+#endif
+			risk += money * dist;
+		}
+
+		/* Distance & risk from last node to deposit */
+		dx = coords.at(circuit.at(m - 1)).x;
+		dy = coords.at(circuit.at(m - 1)).y;
+
+		dist = sqrt(dx * dx + dy * dy);
+		cost += dist;
+
+#if 0
+		money += demand.at(i - 1);
+#endif
+		risk += money * dist;
+
+		/* Print cost, risk & route */
+		cout << fixed << cost << ' ' << fixed << risk << " 0";
+		for (unsigned int i = 0; i < m; i++)
+			cout << "->" << circuit.at(i) + 1;
+		cout << '\n';
+	}
 }
