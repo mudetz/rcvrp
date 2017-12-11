@@ -44,6 +44,7 @@ public:
 	void greedy_init(void);
 	unsigned int size(void);
 	void push_back(Node n);
+	void print(void);
 };
 
 
