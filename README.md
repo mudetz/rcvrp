@@ -24,8 +24,23 @@ Aditionally the following `make` rules are included:
 ## Execution
 
 ```bash
-# I don't really know yet. I have to design a good API.
+# Redirect the input to STDIN
+rcvrp < input.txt
+
+# You may configure some parameters using environment variables
+LOOPTIME=1000 rcvrp < input.txt
 ```
+
+### Available environment variables
+- `MULTIPLIER`: Sets the temperature multiplier. This operation is done after a
+  fixed amount of iterations. (Default = 0.98).
+- `TEMPERATURE`: Sets the initial temperature. (Default = 128.0).
+- `ITERATIONS`: How many iterations before the temperature is multiplied and
+  cooled down. (Default = 128).
+- `LOOPTIME`: Sets in milliseconds how long the program will be iterating.
+  (Default = 256).
+- `THREADS`: Sets how many threads will be used during the execution. (Default =
+  OS detected).
 
 ## Removal
 
