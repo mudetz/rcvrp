@@ -32,6 +32,7 @@ private:
 	void kopt(void);
 public:
 	static std::vector<Node> coords;
+	static std::vector<unsigned int> demand;
 	std::vector<unsigned int> perm;
 	std::vector<bool> orig;
 
@@ -40,11 +41,11 @@ public:
 	Solution(Solution const &other);
 
 	void any_neighbor(void);
-	double eval(void);
+	double eval(double threshold);
 	void greedy_init(void);
 	unsigned int size(void);
 	void push_back(Node n);
-	void print(void);
+	void print(double threshold);
 };
 
 

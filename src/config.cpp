@@ -40,11 +40,7 @@ void parse_cfg(int const argc, char const **argv)
 	ctx.temperature = 128.0;
 	ctx.max_iter = 0;
 	ctx.max_ms = 256;
-#if BENCHMARK
-	ctx.threads = 1;
-#else
 	ctx.threads = thread::hardware_concurrency();
-#endif
 
 	/* Parse argument vector */
 
