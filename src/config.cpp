@@ -54,4 +54,7 @@ void parse_cfg(int const argc, char const **argv)
 	if (getenv("THREADS"))
 		ctx.threads = (unsigned int)stoul(getenv("THREADS"));
 
+#if BENCHMARK
+	ctx.threads = 1;
+#endif
 }
