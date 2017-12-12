@@ -29,15 +29,7 @@ using std::fabs;
 using std::random_device;
 using unif_dbl_d = std::uniform_real_distribution<double>;
 
-#if BENCHMARK
-#include <iostream>
-#include <algorithm>
-using std::cerr;
-using std::fixed;
-using std::count_if;
-#endif
-
-Solution sa(Solution sol)
+Solution sa(Solution sol, double risk)
 {
 	/* Initial greedy solution */
 	sol.greedy_init();
@@ -53,14 +45,10 @@ Solution sa(Solution sol)
 	/* Iterate through neighbors in a time window */
 	Timer timer;
 	do {
-#if BENCHMARK
-		cerr.precision(6);
-		cerr << count_if(neigh.orig.begin(), neigh.orig.end(), [](bool i) { return i; }) << ' ' << fixed << neigh.eval() << '\n';
-#endif
 		Solution nneigh{neigh};
 		nneigh.any_neighbor();
 
-		double diff = neigh.eval() - nneigh.eval();
+		double diff = neigh.eval(risk) - nneigh.eval(risk);
 
 		/* If neighbor is better, switch to it */
 		if (diff > 0.0f)
@@ -69,7 +57,7 @@ Solution sa(Solution sol)
 		else if (rd_double(rd) < exp(diff / t()))
 			neigh = nneigh;
 		/* And check if the new one is the best one so far */
-		if (neigh.eval() < best.eval())
+		if (neigh.eval(risk) < best.eval(risk))
 			best = neigh;
 	} while (timer.loop_incomplete(ctx.max_ms));
 
