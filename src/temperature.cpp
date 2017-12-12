@@ -22,7 +22,9 @@
 double Temperature::operator() (void)
 {
 	double r = this->curr;
-	if (this->curr > 1)
+	if (this->curr > 1 && this->it++ % ctx.max_iter == 0) {
 		this->curr *= ctx.temp_multiplier;
+		this->it = 0;
+	}
 	return r;
 }
