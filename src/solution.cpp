@@ -19,19 +19,27 @@
 #include "solution.h"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <limits>
+#include <queue>
 #include <random>
+#include <vector>
 
-using std::sqrt;
+using dl = std::numeric_limits<double>;
 using std::all_of;
-using std::swap;
+using std::cout;
+using std::fabs;
+using std::fixed;
+using std::queue;
+using std::random_device;
 using std::reverse;
 using std::sort;
-using std::fabs;
-using std::random_device;
-using dl = std::numeric_limits<double>;
+using std::sqrt;
+using std::swap;
+using std::vector;
 
-std::vector<Node> Solution::coords = std::vector<Node>{};
+vector<Node> Solution::coords = vector<Node>{};
+vector<unsigned int> Solution::demand = vector<unsigned int>{};
 
 Solution::Solution()
 	: r_int(0, 100)
@@ -51,7 +59,7 @@ Solution::Solution(unsigned int n)
 	: r_int(0, n - 1)
 	, r_double(0.0, 1.0)
 	, perm()
-	, orig(n, false)
+	, orig(n, true)
 {
 	perm.reserve(n);
 	orig.back() = true;
@@ -87,45 +95,73 @@ void Solution::kopt(void)
 void Solution::any_neighbor(void)
 {
 	random_device rd;
-	if (r_double(rd) < 0.05)
+	if (r_double(rd) < 0.5)
 		flip();
 	else
 		kopt();
 }
 
-double Solution::eval(void)
+double Solution::eval(double threshold)
 {
+	/* Get solution cost. If infesaible, return infinity. */
 	double cost = 0.0;
 	unsigned int k = (unsigned int)Solution::coords.size();
 
+	/* Start from the deposit */
+	unsigned int st = 0;
+	while (!orig.at(perm.at(st++)));
+
+	/* Store money and risk for each vehicle loop */
+	unsigned int v_money = 0;
+	double v_risk = 0;
+
+	/* Variables to improve code legibility */
+	double dx;
+	double dy;
+	double dist;
+
+	/* Oterate through each vehicle loop */
 	for (unsigned int i = 0; i < k; i++) {
-		/* Check if returning to deposit */
-		if (orig.at(perm.at(i))) {
-			double dx;
-			double dy;
+		/* Check if coming from deposit */
+		if (orig.at(perm.at((st + i - 1 + k) % k))) {
+			v_money = 0;
+			v_risk = 0;
 
-			/* Cost to return to deposit from current point */
-			dx = Solution::coords.at(perm.at(i)).x;
-			dy = Solution::coords.at(perm.at(i)).y;
-			cost += sqrt(dx * dx + dy * dy);
+			dx = coords.at(perm.at((i + st) % k)).x;
+			dy = coords.at(perm.at((i + st) % k)).y;
+			dist = sqrt(dx * dx + dy * dy);
 
-			/* Cost to get from deposit to next point */
-			dx = Solution::coords.at((i + 1) % k).x;
-			dy = Solution::coords.at((i + 1) % k).y;
-			cost += sqrt(dx * dx + dy * dy);
-		} else {
-			double dx;
-			double dy;
-
-			dx = Solution::coords.at(perm.at(i)).x;
-			dx -= Solution::coords.at(perm.at((i + 1) % k)).x;
-
-			dy = Solution::coords.at(perm.at(i)).y;
-			dy -= Solution::coords.at(perm.at((i + 1) % k)).y;
-
-			/* Cost to next point */
-			cost += sqrt(dx * dx + dy * dy);
+			cost += dist;
+			v_money += demand.at(perm.at((i + st) % k));
 		}
+
+		/* Check if going to deposit, else add node-node distance */
+		if (orig.at(perm.at((st + i) % k))) {
+			dx = coords.at(perm.at((i + st) % k)).x;
+			dy = coords.at(perm.at((i + st) % k)).y;
+			dist = sqrt(dx * dx + dy * dy);
+
+			cost += dist;
+			v_risk += v_money * dist;
+		} else {
+			dx = coords.at(perm.at((i + st) % k)).x;
+			dy = coords.at(perm.at((i + st) % k)).y;
+			dx -= coords.at(perm.at((i + st + 1) % k)).x;
+			dy -= coords.at(perm.at((i + st + 1) % k)).y;
+			dist = sqrt(dx * dx + dy * dy);
+
+			cost += dist;
+			v_risk += v_money * dist;
+			v_money += demand.at(perm.at((i + st) % k));
+		}
+
+		/* Check if solution is infeasible */
+		if (v_risk > threshold)
+#if 0
+			cost += (v_money - 1) * dist;
+#else
+			return dl::infinity();
+#endif
 	}
 
 	return cost;
@@ -134,9 +170,9 @@ double Solution::eval(void)
 void Solution::greedy_init(void)
 {
 	sort(perm.begin(), perm.end(), [](unsigned a, unsigned b) {
-		if (fabs(Solution::coords.at(a).x - Solution::coords.at(b).x) <= dl::epsilon())
-			return Solution::coords.at(a).y <= Solution::coords.at(b).y;
-		return Solution::coords.at(a).x <= Solution::coords.at(b).x;
+		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
+			return coords.at(a).y <= coords.at(b).y;
+		return coords.at(a).x <= coords.at(b).x;
 	});
 }
 
@@ -148,4 +184,81 @@ unsigned int Solution::size(void)
 void Solution::push_back(Node n)
 {
 	Solution::coords.push_back(n);
+}
+
+void Solution::print(double threshold)
+{
+	/* Total cost */
+	cout.precision(6);
+	cout << fixed << eval(threshold) << '\n';
+
+	/* Required cars*/
+	unsigned int cars = (unsigned int)count(orig.begin(), orig.end(), true);
+	cout << cars << '\n';
+
+	/* Queue of circuits (each represented as a vector) */
+	queue< vector<unsigned int> > circuits;
+
+	unsigned int n = (unsigned int)orig.size();
+	unsigned int st = 0;
+	while (!orig.at(perm.at(st++)));
+
+	for (unsigned int i = 0; i < n; i++) {
+		if (orig.at(perm.at((st + i - 1 + n) % n)))
+			circuits.push(vector<unsigned int>{});
+		circuits.back().push_back(perm.at((st + i) % n));
+	}
+
+	/* For each circuit print cost, risk and nodes */
+	while (!circuits.empty()) {
+		vector<unsigned int> circuit = circuits.front();
+		circuits.pop();
+		unsigned int m = (unsigned int)circuit.size();
+
+		/* Temporary variables */
+		double risk = 0.0;
+		double cost = 0.0;
+		unsigned int money = 0;
+
+		/* Useful variables (improve legibility) */
+		double dx;
+		double dy;
+		double dist;
+
+		/* Distance & risk from deposit to first node */
+		dx = coords.at(circuit.at(0)).x;
+		dy = coords.at(circuit.at(0)).y;
+		dist = sqrt(dx * dx + dy * dy);
+
+		cost += dist;
+		risk += dist * money;
+		money += demand.at(circuit.at(0));
+
+		/* Distance & risk among nodes */
+		for (unsigned int i = 0; i < m - 1; i++) {
+			dx = coords.at(circuit.at(i)).x;
+			dy = coords.at(circuit.at(i)).y;
+			dx -= coords.at(circuit.at(i + 1)).x;
+			dy -= coords.at(circuit.at(i + 1)).y;
+			dist = sqrt(dx * dx + dy * dy);
+
+			cost += dist;
+			risk += money * dist;
+			money += demand.at(circuit.at(i));
+		}
+
+		/* Distance & risk from last node to deposit */
+		dx = coords.at(circuit.at(m - 1)).x;
+		dy = coords.at(circuit.at(m - 1)).y;
+		dist = sqrt(dx * dx + dy * dy);
+
+		cost += dist;
+		risk += money * dist;
+
+		/* Print cost, risk & route */
+		cout << fixed << cost << ' ' << fixed << risk << " 0";
+		for (unsigned int i = 0; i < m; i++)
+			cout << "->" << circuit.at(i) + 1;
+		cout << "->0" << '\n';
+	}
 }

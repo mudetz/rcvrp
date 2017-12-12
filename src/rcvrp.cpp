@@ -42,29 +42,29 @@ int main(int const argc, char const **argv)
 
 	double threshold;
 	cin >> threshold;
+	ctx.risk_threshold = threshold;
 
-	vector<unsigned> demand;
-	demand.reserve(nodes);
+	Solution sol(nodes);
+
 	for (unsigned int i = 0; i < nodes; i++) {
 		unsigned int d;
 		cin >> d;
-		demand.push_back(d);
+		Solution::demand.push_back(d);
 	}
 
-	Solution sol(nodes);
 	for (unsigned int i = 0; i < nodes; i++) {
 		double x;
 		double y;
 
 		cin >> x;
 		cin >> y;
-		sol.push_back(Node{x, y});
+		Solution::coords.push_back(Node{x, y});
 	}
 
 	/* Start solving using many threads */
 	vector< future<Solution> > threads(ctx.threads);
 	for (unsigned int i = 0; i < ctx.threads; i++)
-		threads.at(i) = async(sa, sol);
+		threads.at(i) = async(sa, sol, threshold);
 
 	vector<Solution> results(ctx.threads);
 	for (unsigned int i = 0; i < ctx.threads; i++)
@@ -73,19 +73,11 @@ int main(int const argc, char const **argv)
 	/* Select best solution */
 	Solution best = results.at(0);
 	for (unsigned int i = 0; i < results.size(); i++)
-		if (results.at(i).eval() < best.eval())
+		if (results.at(i).eval(threshold) < best.eval(threshold))
 			best = results.at(i);
 
 	/* Output best solution cost and nodes */
-	cout.precision(6);
-	cout << fixed << best.eval() << '\n';
-	for (unsigned int i = 0; i < best.size(); i++)
-		cout << fixed
-		     << Solution::coords.at( best.perm.at(i) ).x
-		     << ' '
-		     << fixed
-		     << Solution::coords.at( best.perm.at(i) ).y
-		     << '\n';
+	best.print(threshold);
 
 	return 0;
 }

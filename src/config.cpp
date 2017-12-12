@@ -35,18 +35,12 @@ void parse_cfg(int const argc, char const **argv)
 	(void)argv;
 
 	/* Set defaults */
-	ctx.risk_threshold = 1024.0; //WARD should be in args
+	ctx.risk_threshold = 0.0;
 	ctx.temp_multiplier = 0.98;
 	ctx.temperature = 128.0;
 	ctx.max_iter = 0;
 	ctx.max_ms = 256;
-#if BENCHMARK
-	ctx.threads = 1;
-#else
 	ctx.threads = thread::hardware_concurrency();
-#endif
-
-	/* Parse argument vector */
 
 	/* Parse environment variables */
 	if (getenv("MULTIPLIER"))

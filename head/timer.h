@@ -16,37 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __solution_h__
-#define __solution_h__
+#ifndef __timer_h__
+#define __timer_h__
 
-#include "node.h"
-#include <vector>
-#include <random>
+#include <chrono>
 
-class Solution {
+class Timer {
 private:
-	std::uniform_int_distribution<unsigned> r_int;
-	std::uniform_real_distribution<float> r_double;
-
-	void flip(void);
-	void kopt(void);
+	std::chrono::high_resolution_clock::time_point start;
 public:
-	static std::vector<Node> coords;
-	static std::vector<unsigned int> demand;
-	std::vector<unsigned int> perm;
-	std::vector<bool> orig;
-
-	Solution();
-	Solution(unsigned int n);
-	Solution(Solution const &other);
-
-	void any_neighbor(void);
-	double eval(double threshold);
-	void greedy_init(void);
-	unsigned int size(void);
-	void push_back(Node n);
-	void print(double threshold);
+	Timer(void);
+	bool loop_incomplete(unsigned int looptime);
 };
-
 
 #endif

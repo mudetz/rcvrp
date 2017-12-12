@@ -16,37 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __solution_h__
-#define __solution_h__
+#include "timer.h"
 
-#include "node.h"
-#include <vector>
-#include <random>
+using hrc = std::chrono::high_resolution_clock;
+using ms = std::chrono::milliseconds;
+using std::chrono::duration_cast;
 
-class Solution {
-private:
-	std::uniform_int_distribution<unsigned> r_int;
-	std::uniform_real_distribution<float> r_double;
+Timer::Timer(void)
+	: start{hrc::now()}
+{}
 
-	void flip(void);
-	void kopt(void);
-public:
-	static std::vector<Node> coords;
-	static std::vector<unsigned int> demand;
-	std::vector<unsigned int> perm;
-	std::vector<bool> orig;
-
-	Solution();
-	Solution(unsigned int n);
-	Solution(Solution const &other);
-
-	void any_neighbor(void);
-	double eval(double threshold);
-	void greedy_init(void);
-	unsigned int size(void);
-	void push_back(Node n);
-	void print(double threshold);
-};
-
-
-#endif
+bool Timer::loop_incomplete(unsigned int looptime)
+{
+	return duration_cast<ms>(hrc::now() - start) < ms(looptime);
+}

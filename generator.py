@@ -16,14 +16,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+from __future__ import print_function
 from random import random as random
+from random import randrange as randrange
+from sys import argv as argv
 
-N = 1024
+N = int(argv[1])
 
 print(N)
-print(float(N))
+print(float(N * (N - 1) // 2))
 
-print(*[0 for i in range(N)])
+print(*[randrange(1, N / 2) for i in range(N)])
 
 for _ in range(N):
-	print(N * random(), N * random())
+	print(randrange(1, N / 2) * random(), randrange(1, N / 2) * random())
