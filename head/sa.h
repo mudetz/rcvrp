@@ -21,6 +21,6 @@
 
 #include "solution.h"
 
-Solution sa(Solution corrds);
+Solution sa(Solution sol, double risk);
 
 #endif

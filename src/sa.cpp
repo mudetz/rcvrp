@@ -19,27 +19,17 @@
 #include "sa.h"
 #include "temperature.h"
 #include "config.h"
+#include "timer.h"
 #include <chrono>
 #include <cmath>
 #include <random>
 
-using hrc = std::chrono::high_resolution_clock;
-using ms = std::chrono::milliseconds;
-using std::chrono::duration_cast;
 using std::exp;
 using std::fabs;
 using std::random_device;
 using unif_dbl_d = std::uniform_real_distribution<double>;
 
-#if BENCHMARK
-#include <iostream>
-#include <algorithm>
-using std::cerr;
-using std::fixed;
-using std::count_if;
-#endif
-
-Solution sa(Solution sol)
+Solution sa(Solution sol, double risk)
 {
 	/* Initial greedy solution */
 	sol.greedy_init();
@@ -53,16 +43,12 @@ Solution sa(Solution sol)
 	unif_dbl_d rd_double(0.0, 1.0);
 
 	/* Iterate through neighbors in a time window */
-	hrc::time_point start = hrc::now();
+	Timer timer;
 	do {
-#if BENCHMARK
-		cerr.precision(6);
-		cerr << count_if(neigh.orig.begin(), neigh.orig.end(), [](bool i) { return i; }) << ' ' << fixed << neigh.eval() << '\n';
-#endif
 		Solution nneigh{neigh};
 		nneigh.any_neighbor();
 
-		double diff = neigh.eval() - nneigh.eval();
+		double diff = neigh.eval(risk) - nneigh.eval(risk);
 
 		/* If neighbor is better, switch to it */
 		if (diff > 0.0f)
@@ -71,9 +57,9 @@ Solution sa(Solution sol)
 		else if (rd_double(rd) < exp(diff / t()))
 			neigh = nneigh;
 		/* And check if the new one is the best one so far */
-		if (neigh.eval() < best.eval())
+		if (neigh.eval(risk) < best.eval(risk))
 			best = neigh;
-	} while (duration_cast<ms>(hrc::now() - start) <= ms(ctx.max_ms));
+	} while (timer.loop_incomplete(ctx.max_ms));
 
 	return best;
 }
