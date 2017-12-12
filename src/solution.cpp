@@ -17,6 +17,7 @@
  */
 
 #include "solution.h"
+#include "heuristic.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -169,11 +170,14 @@ double Solution::eval(double threshold)
 
 void Solution::greedy_init(void)
 {
+#if 0
 	sort(perm.begin(), perm.end(), [](unsigned a, unsigned b) {
 		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
 			return coords.at(a).y <= coords.at(b).y;
 		return coords.at(a).x <= coords.at(b).x;
 	});
+#endif
+	Heuristic::prim(coords, perm);
 }
 
 unsigned int Solution::size(void)
@@ -256,7 +260,7 @@ void Solution::print(double threshold)
 		risk += money * dist;
 
 		/* Print cost, risk & route */
-		cout << fixed << cost << ' ' << fixed << risk << " 0";
+		cout << fixed << cost << '\t' << fixed << risk << "\t0";
 		for (unsigned int i = 0; i < m; i++)
 			cout << "->" << circuit.at(i) + 1;
 		cout << "->0" << '\n';
