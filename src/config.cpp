@@ -38,7 +38,7 @@ void parse_cfg(int const argc, char const **argv)
 	ctx.risk_threshold = 0.0;
 	ctx.temp_multiplier = 0.98;
 	ctx.temperature = 128.0;
-	ctx.max_iter = 0;
+	ctx.max_iter = 128;
 	ctx.max_ms = 256;
 	ctx.threads = thread::hardware_concurrency();
 
@@ -51,4 +51,10 @@ void parse_cfg(int const argc, char const **argv)
 		ctx.max_iter = (unsigned int)stoul(getenv("ITERATIONS"));
 	if (getenv("LOOPTIME"))
 		ctx.max_ms = (unsigned int)stoul(getenv("LOOPTIME"));
+	if (getenv("THREADS"))
+		ctx.threads = (unsigned int)stoul(getenv("THREADS"));
+
+#if BENCHMARK
+	ctx.threads = 1;
+#endif
 }

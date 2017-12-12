@@ -29,6 +29,12 @@ using std::fabs;
 using std::random_device;
 using unif_dbl_d = std::uniform_real_distribution<double>;
 
+#if BENCHMARK
+#include <iostream>
+using std::fixed;
+using std::cerr;
+#endif
+
 Solution sa(Solution sol, double risk)
 {
 	/* Initial greedy solution */
@@ -44,7 +50,14 @@ Solution sa(Solution sol, double risk)
 
 	/* Iterate through neighbors in a time window */
 	Timer timer;
+
+#if BENCHMARK
+		cerr.precision(6);
+#endif
 	do {
+#if BENCHMARK
+			cerr << fixed << neigh.eval(risk) << '\n';
+#endif
 		Solution nneigh{neigh};
 		nneigh.any_neighbor();
 

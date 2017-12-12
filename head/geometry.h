@@ -16,21 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __config_h__
-#define __config_h__
+#include "node.h"
 
-struct rcvrp_cfg {
-	double risk_threshold;
-	double temp_multiplier;
-	double temperature;
-	unsigned int max_iter;
-	unsigned int max_ms;
-	unsigned int threads;
-	bool benchmark;
-};
-
-extern struct rcvrp_cfg ctx;
-
-void parse_cfg(int const argc, char const **argv);
-
-#endif
+namespace Geometry
+{
+	double dist(Node &a, Node &b);
+}

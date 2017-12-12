@@ -16,21 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __config_h__
-#define __config_h__
+#ifndef __heuristic_h__
+#define __heuristic_h__
 
-struct rcvrp_cfg {
-	double risk_threshold;
-	double temp_multiplier;
-	double temperature;
-	unsigned int max_iter;
-	unsigned int max_ms;
-	unsigned int threads;
-	bool benchmark;
-};
+#include "node.h"
+#include <vector>
 
-extern struct rcvrp_cfg ctx;
-
-void parse_cfg(int const argc, char const **argv);
+namespace Heuristic
+{
+	void prim(std::vector<Node> &coords, std::vector<unsigned int> &perm);
+	double avg_dist(std::vector<Node> &coords);
+}
 
 #endif

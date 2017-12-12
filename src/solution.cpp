@@ -17,6 +17,7 @@
  */
 
 #include "solution.h"
+#include "heuristic.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -33,13 +34,13 @@ using std::fixed;
 using std::queue;
 using std::random_device;
 using std::reverse;
-using std::sort;
 using std::sqrt;
 using std::swap;
 using std::vector;
 
 vector<Node> Solution::coords = vector<Node>{};
 vector<unsigned int> Solution::demand = vector<unsigned int>{};
+double Solution::avg_dist = 0;
 
 Solution::Solution()
 	: r_int(0, 100)
@@ -157,11 +158,7 @@ double Solution::eval(double threshold)
 
 		/* Check if solution is infeasible */
 		if (v_risk > threshold)
-#if 0
-			cost += (v_money - 1) * dist;
-#else
-			return dl::infinity();
-#endif
+			cost += v_money * (avg_dist + dist);
 	}
 
 	return cost;
@@ -169,11 +166,8 @@ double Solution::eval(double threshold)
 
 void Solution::greedy_init(void)
 {
-	sort(perm.begin(), perm.end(), [](unsigned a, unsigned b) {
-		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
-			return coords.at(a).y <= coords.at(b).y;
-		return coords.at(a).x <= coords.at(b).x;
-	});
+	avg_dist = Heuristic::avg_dist(coords);
+	Heuristic::prim(coords, perm);
 }
 
 unsigned int Solution::size(void)
@@ -256,7 +250,7 @@ void Solution::print(double threshold)
 		risk += money * dist;
 
 		/* Print cost, risk & route */
-		cout << fixed << cost << ' ' << fixed << risk << " 0";
+		cout << fixed << cost << '\t' << fixed << risk << "\t0";
 		for (unsigned int i = 0; i < m; i++)
 			cout << "->" << circuit.at(i) + 1;
 		cout << "->0" << '\n';

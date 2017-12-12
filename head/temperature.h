@@ -22,9 +22,11 @@
 class Temperature {
 private:
 	double curr;
+	unsigned long it;
 public:
 	Temperature(double _curr)
 		: curr(_curr)
+		, it(0)
 	{}
 	double operator() (void);
 };
