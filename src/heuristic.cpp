@@ -43,3 +43,19 @@ void Heuristic::prim(vector<Node> &coords, vector<unsigned int> &perm)
 		swap(perm.at(i + 1), perm.at(best_node));
 	}
 }
+
+double Heuristic::avg_dist(vector<Node> &coords)
+{
+	unsigned int N = (unsigned int)coords.size();
+	double total = 0.0;
+
+	Node origin{0, 0};
+	for (unsigned int i = 0; i <  N; i++)
+		total += Geometry::dist(coords.at(i), origin);
+
+	for (unsigned int i = 0; i < N - 1; i++)
+		for (unsigned int j = i + 1; j < N; j++)
+			total += Geometry::dist(coords.at(i), coords.at(j));
+
+	return total / (N + (N * (N - 1) / 2));
+}

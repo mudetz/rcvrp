@@ -25,6 +25,7 @@
 namespace Heuristic
 {
 	void prim(std::vector<Node> &coords, std::vector<unsigned int> &perm);
+	double avg_dist(std::vector<Node> &coords);
 }
 
 #endif

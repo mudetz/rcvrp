@@ -34,13 +34,13 @@ using std::fixed;
 using std::queue;
 using std::random_device;
 using std::reverse;
-using std::sort;
 using std::sqrt;
 using std::swap;
 using std::vector;
 
 vector<Node> Solution::coords = vector<Node>{};
 vector<unsigned int> Solution::demand = vector<unsigned int>{};
+double Solution::avg_dist = 0;
 
 Solution::Solution()
 	: r_int(0, 100)
@@ -158,11 +158,7 @@ double Solution::eval(double threshold)
 
 		/* Check if solution is infeasible */
 		if (v_risk > threshold)
-#if 0
-			cost += (v_money - 1) * dist;
-#else
-			return dl::infinity();
-#endif
+			cost += v_money * (avg_dist + dist);
 	}
 
 	return cost;
@@ -170,13 +166,7 @@ double Solution::eval(double threshold)
 
 void Solution::greedy_init(void)
 {
-#if 0
-	sort(perm.begin(), perm.end(), [](unsigned a, unsigned b) {
-		if (fabs(coords.at(a).x - coords.at(b).x) <= dl::epsilon())
-			return coords.at(a).y <= coords.at(b).y;
-		return coords.at(a).x <= coords.at(b).x;
-	});
-#endif
+	avg_dist = Heuristic::avg_dist(coords);
 	Heuristic::prim(coords, perm);
 }
 
