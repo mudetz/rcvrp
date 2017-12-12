@@ -51,4 +51,7 @@ void parse_cfg(int const argc, char const **argv)
 		ctx.max_iter = (unsigned int)stoul(getenv("ITERATIONS"));
 	if (getenv("LOOPTIME"))
 		ctx.max_ms = (unsigned int)stoul(getenv("LOOPTIME"));
+	if (getenv("THREADS"))
+		ctx.threads = (unsigned int)stoul(getenv("THREADS"));
+
 }

@@ -26,6 +26,7 @@ struct rcvrp_cfg {
 	unsigned int max_iter;
 	unsigned int max_ms;
 	unsigned int threads;
+	bool benchmark;
 };
 
 extern struct rcvrp_cfg ctx;
