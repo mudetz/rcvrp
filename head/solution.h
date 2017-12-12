@@ -35,6 +35,7 @@ public:
 	static std::vector<unsigned int> demand;
 	std::vector<unsigned int> perm;
 	std::vector<bool> orig;
+	static double avg_dist;
 
 	Solution();
 	Solution(unsigned int n);

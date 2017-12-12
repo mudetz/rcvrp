@@ -16,21 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __config_h__
-#define __config_h__
+#include "geometry.h"
+#include "node.h"
+#include <cmath>
 
-struct rcvrp_cfg {
-	double risk_threshold;
-	double temp_multiplier;
-	double temperature;
-	unsigned int max_iter;
-	unsigned int max_ms;
-	unsigned int threads;
-	bool benchmark;
-};
+using std::sqrt;
 
-extern struct rcvrp_cfg ctx;
-
-void parse_cfg(int const argc, char const **argv);
-
-#endif
+double Geometry::dist(Node &a, Node &b)
+{
+	double dx = a.x - b.x;
+	double dy = a.y - b.y;
+	return sqrt(dx * dx + dy * dy);
+}
