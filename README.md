@@ -19,7 +19,7 @@ Under the GNU GPLv3.0 only license.
 Aditionally the following `make` rules are included:
 - `make clean`: Clean intermediate binaries
 - `make distclean`: Clean final binaries
-- `make test`: For testing the executable before installation
+- `make cleanall`: `clean`+`distclean`
 
 ## Execution
 
@@ -32,6 +32,7 @@ LOOPTIME=1000 rcvrp < input.txt
 ```
 
 ### Available environment variables
+
 - `MULTIPLIER`: Sets the temperature multiplier. This operation is done after a
   fixed amount of iterations. (Default = 0.98).
 - `TEMPERATURE`: Sets the initial temperature. (Default = 128.0).
