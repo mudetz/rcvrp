@@ -19,6 +19,7 @@
 #ifndef __config_h__
 #define __config_h__
 
+/* Store configuration in a struct */
 struct rcvrp_cfg {
 	double risk_threshold;
 	double temp_multiplier;
@@ -28,8 +29,10 @@ struct rcvrp_cfg {
 	unsigned int threads;
 };
 
+/* A static global struct */
 extern struct rcvrp_cfg ctx;
 
+/* Parse user configuration */
 void parse_cfg(int const argc, char const **argv);
 
 #endif

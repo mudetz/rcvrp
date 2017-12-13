@@ -19,6 +19,7 @@
 #ifndef __temperature_h__
 #define __temperature_h__
 
+/* Thermometer class */
 class Temperature {
 private:
 	double curr;

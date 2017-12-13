@@ -21,6 +21,7 @@
 
 double Temperature::operator() (void)
 {
+	/* Update temperature every fixed amount of iterations. */
 	double r = this->curr;
 	if (this->curr > 1 && this->it++ % ctx.max_iter == 0) {
 		this->curr *= ctx.temp_multiplier;

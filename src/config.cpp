@@ -31,10 +31,11 @@ struct rcvrp_cfg ctx;
 
 void parse_cfg(int const argc, char const **argv)
 {
+	/* "Use" unused parameters and avoid warnings */
 	(void)argc;
 	(void)argv;
 
-	/* Set defaults */
+	/* Set defaults configuration */
 	ctx.risk_threshold = 0.0;
 	ctx.temp_multiplier = 0.98;
 	ctx.temperature = 128.0;
@@ -42,7 +43,7 @@ void parse_cfg(int const argc, char const **argv)
 	ctx.max_ms = 256;
 	ctx.threads = thread::hardware_concurrency();
 
-	/* Parse environment variables */
+	/* Parse environment variables and set user configuration */
 	if (getenv("MULTIPLIER"))
 		ctx.temp_multiplier = stof(getenv("MULTIPLIER"));
 	if (getenv("TEMPERATURE"))
@@ -54,6 +55,10 @@ void parse_cfg(int const argc, char const **argv)
 	if (getenv("THREADS"))
 		ctx.threads = (unsigned int)stoul(getenv("THREADS"));
 
+/*
+ * Override threads if benchmarking (many threads generate racing condition on)
+ * stdout, which is unwanted.
+ */
 #if BENCHMARK
 	ctx.threads = 1;
 #endif
