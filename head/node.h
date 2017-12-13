@@ -19,27 +19,15 @@
 #ifndef __node_h__
 #define __node_h__
 
+/* Node class for nodes */
 class Node {
 public:
 	double x;
 	double y;
-	bool orig;
-	Node()
-		: x(0)
-		, y(0)
-		, orig(false)
-	{}
-	Node(double _x, double _y)
-		: x(_x)
-		, y(_y)
-		, orig(false)
-	{}
-	Node(double _x, double _y, bool _orig)
-		: x(_x)
-		, y(_y)
-		, orig(_orig)
-	{}
-	~Node() {}
+
+	/* Constructors */
+	Node();
+	Node(double _x, double _y);
 };
 
 #endif

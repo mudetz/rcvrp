@@ -22,6 +22,7 @@
 #include "node.h"
 #include <vector>
 
+/* Heuristic funcions */
 namespace Heuristic
 {
 	void prim(std::vector<Node> &coords, std::vector<unsigned int> &perm);

@@ -22,6 +22,7 @@
 
 using std::sqrt;
 
+/* Euclideand distance between two nodes */
 double Geometry::dist(Node &a, Node &b)
 {
 	double dx = a.x - b.x;
