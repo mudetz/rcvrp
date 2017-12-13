@@ -40,16 +40,20 @@ int main(int const argc, char const **argv)
 	unsigned int nodes;
 	cin >> nodes;
 
+	/* Read risk threshold from stdin */
 	double threshold;
 	cin >> threshold;
 	ctx.risk_threshold = threshold;
 
+	/* Prepare the initial solution */
 	Solution sol(nodes - 1);
 
+	/* Store demands in initial solution */
 	for (unsigned int i = 0; i < nodes; i++) {
 		unsigned int d;
 		cin >> d;
 
+		/* Ignore first node, for our representation, it is redundant */
 		if (i == 0)
 			continue;
 		Solution::demand.push_back(d);
@@ -62,6 +66,7 @@ int main(int const argc, char const **argv)
 		cin >> x;
 		cin >> y;
 
+		/* Ignore first node, for our representation, it is redundant */
 		if (i == 0)
 			continue;
 		Solution::coords.push_back(Node{x, y});
@@ -72,11 +77,12 @@ int main(int const argc, char const **argv)
 	for (unsigned int i = 0; i < ctx.threads; i++)
 		threads.at(i) = async(sa, sol, threshold);
 
+	/* Wait for each thread to finish */
 	vector<Solution> results(ctx.threads);
 	for (unsigned int i = 0; i < ctx.threads; i++)
 		results.at(i) = threads.at(i).get();
 
-	/* Select best solution */
+	/* Select best solution among thread executions */
 	Solution best = results.at(0);
 	for (unsigned int i = 0; i < results.size(); i++)
 		if (results.at(i).eval(threshold) < best.eval(threshold))
@@ -85,5 +91,6 @@ int main(int const argc, char const **argv)
 	/* Output best solution cost and nodes */
 	best.print(threshold);
 
+	/* At this point, everything is fine */
 	return 0;
 }
