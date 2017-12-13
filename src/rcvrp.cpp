@@ -44,11 +44,14 @@ int main(int const argc, char const **argv)
 	cin >> threshold;
 	ctx.risk_threshold = threshold;
 
-	Solution sol(nodes);
+	Solution sol(nodes - 1);
 
 	for (unsigned int i = 0; i < nodes; i++) {
 		unsigned int d;
 		cin >> d;
+
+		if (i == 0)
+			continue;
 		Solution::demand.push_back(d);
 	}
 
@@ -58,6 +61,9 @@ int main(int const argc, char const **argv)
 
 		cin >> x;
 		cin >> y;
+
+		if (i == 0)
+			continue;
 		Solution::coords.push_back(Node{x, y});
 	}
 
