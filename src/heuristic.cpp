@@ -27,8 +27,10 @@ using std::swap;
 using std::vector;
 using dl = std::numeric_limits<double>;
 
+/* Pseudo prim for initial solutions */
 void Heuristic::prim(vector<Node> &coords, vector<unsigned int> &perm)
 {
+	/* For each node, set the next neighbor as the closest remaining node */
 	for (unsigned int i = 0; i < perm.size() - 1; i++) {
 		unsigned int best_node = (unsigned int)perm.size() - 1;
 		double best_dist = dl::infinity();
@@ -44,15 +46,18 @@ void Heuristic::prim(vector<Node> &coords, vector<unsigned int> &perm)
 	}
 }
 
+/* Get average distance between every node */
 double Heuristic::avg_dist(vector<Node> &coords)
 {
 	unsigned int N = (unsigned int)coords.size();
 	double total = 0.0;
 
+	/* Distances to origin */
 	Node origin{0, 0};
 	for (unsigned int i = 0; i <  N; i++)
 		total += Geometry::dist(coords.at(i), origin);
 
+	/* Distances among nodes */
 	for (unsigned int i = 0; i < N - 1; i++)
 		for (unsigned int j = i + 1; j < N; j++)
 			total += Geometry::dist(coords.at(i), coords.at(j));

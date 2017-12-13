@@ -40,7 +40,7 @@ Solution sa(Solution sol, double risk)
 	/* Initial greedy solution */
 	sol.greedy_init();
 
-	/* Prepare variables for neighbors and PRNGs */
+	/* Prepare variables for neighbors, PRNGs and thermometer */
 	Solution best{sol};
 	Solution neigh{sol};
 	Temperature t(ctx.temperature);
@@ -51,6 +51,7 @@ Solution sa(Solution sol, double risk)
 	/* Iterate through neighbors in a time window */
 	Timer timer;
 
+/* Maybe we want to see the value of each neightbor */
 #if BENCHMARK
 		cerr.precision(6);
 #endif
@@ -58,20 +59,23 @@ Solution sa(Solution sol, double risk)
 #if BENCHMARK
 			cerr << fixed << neigh.eval(risk) << '\n';
 #endif
+		/* Copy current solution and generate a neighbor from it */
 		Solution nneigh{neigh};
 		nneigh.any_neighbor();
 
+		/* Evaluate them and get the difference */
 		double diff = neigh.eval(risk) - nneigh.eval(risk);
 
 		/* If neighbor is better, switch to it */
 		if (diff > 0.0f)
 			neigh = nneigh;
-		/* Or maybe just switch to it */
+		/* Or maybe just switch to it randomly */
 		else if (rd_double(rd) < exp(diff / t()))
 			neigh = nneigh;
 		/* And check if the new one is the best one so far */
 		if (neigh.eval(risk) < best.eval(risk))
 			best = neigh;
+	/* Until time is up */
 	} while (timer.loop_incomplete(ctx.max_ms));
 
 	return best;

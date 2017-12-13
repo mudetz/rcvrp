@@ -18,8 +18,14 @@
 
 #include "node.h"
 
-/* Geometric functions */
-namespace Geometry
-{
-	double dist(Node &a, Node &b);
-}
+/* Default constructor */
+Node::Node()
+	: x(0)
+	, y(0)
+{}
+
+/* Parametrized constructor */
+Node::Node(double _x, double _y)
+	: x(_x)
+	, y(_y)
+{}

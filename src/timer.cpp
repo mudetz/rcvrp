@@ -22,10 +22,12 @@ using hrc = std::chrono::high_resolution_clock;
 using ms = std::chrono::milliseconds;
 using std::chrono::duration_cast;
 
+/* Create timer, set start time as creation time */
 Timer::Timer(void)
 	: start{hrc::now()}
 {}
 
+/* Get time elapsed since timer creation in milliseconds */
 bool Timer::loop_incomplete(unsigned int looptime)
 {
 	return duration_cast<ms>(hrc::now() - start) < ms(looptime);

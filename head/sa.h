@@ -21,6 +21,7 @@
 
 #include "solution.h"
 
+/* Simulated Annealing (sa) solution finder */
 Solution sa(Solution sol, double risk);
 
 #endif

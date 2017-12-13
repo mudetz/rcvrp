@@ -23,24 +23,30 @@
 #include <vector>
 #include <random>
 
+/* Solution class */
 class Solution {
 private:
+	/* PRNGs */
 	std::uniform_int_distribution<unsigned> r_int;
 	std::uniform_real_distribution<float> r_double;
 
+	/* Solution movements */
 	void flip(void);
 	void kopt(void);
 public:
+	/* Required variables */
 	static std::vector<Node> coords;
 	static std::vector<unsigned int> demand;
 	std::vector<unsigned int> perm;
 	std::vector<bool> orig;
 	static double avg_dist;
 
+	/* Constructors */
 	Solution();
 	Solution(unsigned int n);
 	Solution(Solution const &other);
 
+	/* Methods */
 	void any_neighbor(void);
 	double eval(double threshold);
 	void greedy_init(void);
