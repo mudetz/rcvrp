@@ -41,6 +41,7 @@ void parse_cfg(int const argc, char const **argv)
 	ctx.temperature = 128.0;
 	ctx.max_iter = 128;
 	ctx.max_ms = 256;
+	ctx.v_cap = 0;
 	ctx.threads = thread::hardware_concurrency();
 
 	/* Parse environment variables and set user configuration */
@@ -54,6 +55,8 @@ void parse_cfg(int const argc, char const **argv)
 		ctx.max_ms = (unsigned int)stoul(getenv("LOOPTIME"));
 	if (getenv("THREADS"))
 		ctx.threads = (unsigned int)stoul(getenv("THREADS"));
+	if (getenv("CAPACITY"))
+		ctx.v_cap = (unsigned int)stoul(getenv("CAPACITY"));
 
 /*
  * Override threads if benchmarking (many threads generate racing condition on)
