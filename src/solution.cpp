@@ -18,6 +18,7 @@
 
 #include "solution.h"
 #include "heuristic.h"
+#include "config.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -185,6 +186,10 @@ double Solution::eval(double threshold)
 		 */
 		if (v_risk > threshold)
 			cost += v_money * avg_dist;
+
+		/* If solution exceeds vehicle capacity, punish with infinity */
+		if (ctx.v_cap && v_money > ctx.v_cap)
+			return dl::infinity();
 	}
 
 	return cost;

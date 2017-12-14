@@ -27,6 +27,7 @@ struct rcvrp_cfg {
 	unsigned int max_iter;
 	unsigned int max_ms;
 	unsigned int threads;
+	unsigned int v_cap;
 };
 
 /* A static global struct */

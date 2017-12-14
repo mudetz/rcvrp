@@ -42,6 +42,8 @@ LOOPTIME=1000 rcvrp < input.txt
   (Default = 256).
 - `THREADS`: Sets how many threads will be used during the execution. (Default =
   OS detected).
+- `CAPACITY`: Sets the maximum capacity of each vehicle. 0 means infinite
+  capacity for each. (Default = 0).
 
 ## Removal
 
